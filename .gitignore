@@ -109,4 +109,6 @@ venv.bak/
 /Report/*.fls
 /Report/*.log
 /Report/*.out
-/Report/*.synctex.gz
+/Report/*.synctex.g
+/Report/*.blg
+/Report/*.bbl
