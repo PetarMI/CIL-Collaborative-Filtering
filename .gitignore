@@ -112,3 +112,6 @@ venv.bak/
 /Report/*.synctex.g
 /Report/*.blg
 /Report/*.bbl
+
+train_data_matrix.npy
+/cil-collab-filtering-2018/submission.csv
