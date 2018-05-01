@@ -1,5 +1,5 @@
 import pandas as pd
-
+import numpy as np
 # parse the row/colomn indices from the given csv file 
 # and write the result into a new csv file
 def csv_parse(csv_file, csv_to):    
