@@ -16,6 +16,6 @@ Repo for the CIL group project on Recommender Systems and Collaborative FIlterin
   
   - **TODO:** wrap up the baseline solution creation into a method
   
-3. Try to finish SGD algorithm for making prediction
+3. SGD simple version done. Convergence at ~ RMS=0.6, score=1.2
 
-  - The SGD algorithm in Step-3 is not finished yet.  
+  - The SGD algorithm in Step-3 should be optimised for speed and covergence rate
