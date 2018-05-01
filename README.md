@@ -12,7 +12,7 @@ Repo for the CIL group project on Recommender Systems and Collaborative FIlterin
   
 2. Optimised the creation of baseline solution
 
-  - Calculating the average of the non-zero elements in each colomn of matrix A is handled by a vectorized way, which is more efficient.
+  - Calculating the average of the non-zero elements in each colomn of matrix A is now handled in a vectorized way, which is more efficient.
   
   - **TODO:** wrap up the baseline solution creation into a method
   
