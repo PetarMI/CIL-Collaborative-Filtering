@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
-from scipy.sparse import coo_matrix, bmat
-from numpy.random import randint, choice
+from scipy.sparse import coo_matrix
+from numpy.random import randint
 from numpy.linalg import svd
 from time import time
-from os.path import isfile
-import matplotlib.pyplot as plt
+
 
 
 class collabrative_filtering:
@@ -21,7 +20,7 @@ class collabrative_filtering:
         self.user_ids = self.train_data['row_id'] - 1
         self.item_ids = self.train_data['col_id'] - 1
 
-        self.r = coo_matrix((self.train_data, (self.user_ids, self.item_ids)))
+        self.r = coo_matrix((self.train_data['Prediction'], (self.user_ids, self.item_ids)))
 
         self.baseline = self.creat_baseline()
 
@@ -40,9 +39,9 @@ class collabrative_filtering:
 
         return A
 
-    def svd_decomp(self):
+    def _svd_decomp(self):
         # Perform SVD on baseline matrix
-        u, s, vh = np.linalg.svd(self.baseline, full_matrices=False)
+        u, s, vh = svd(self.baseline, full_matrices=False)
 
         s_diag = np.diag(np.sqrt(s))
         u_prime = np.dot(u, s_diag)
@@ -50,46 +49,62 @@ class collabrative_filtering:
 
         return u_prime[:, 0:self.k], vh_prime[0:self.k, :]
 
-    def train(self, alpha, beta, max_iter, epsilon):
+    def train(self, alpha, beta, max_iter, epsilon, sample):
+
+        self.alpha = alpha
+        self.beta = beta
+        self.sample = sample
 
         # Initialize p & q with SVD
-        p, q = self.svd_decomp()
+        self.q, self.p = self._svd_decomp()
 
         # Initialize bias and mu
-        bu = np.zeros([self.user_N, 1])
-        bi = np.zeros([1, self.item_N])
-        mu = np.mean(self.mean_per_item)
+        self.bu = np.zeros([self.user_N, 1])
+        self.bi = np.zeros([1, self.item_N])
+        self.mu = np.mean(self.mean_per_item)
 
-        prediction = np.dot(q, p) + mu + bu + bi
+        self.prediction = self.get_prediction()
 
-        loss, err = self.rms(prediction)
+        self.loss, self.err = self.rms(self.prediction)
 
-        print('Initial Loss: %.5f' % loss)
+        print('Initial Loss: %.5f' % self.loss)
         print('*' * 60)
         i_iter = 1
         tic = time()
         trace = []
 
-        while i_iter <= max_iter and loss >= epsilon:
-            loss_old = loss.copy()
-            self.sgd()
-            loss, err = self.rms(prediction)
-            trace.append([i_iter, loss])
+        while i_iter <= max_iter and self.loss >= epsilon:
+            loss_old = self.loss.copy()
+            self._sgd()
+            self.prediction = self.get_prediction()
+            self.loss, self.err = self.rms(self.prediction)
+            trace.append([i_iter, self.loss])
             if i_iter % 100 == 0:
                 toc = time()
-                print('Iteration: %d, Misfit: %.5f, Sample: %d' % (i_iter, loss, sample))
+                print('Iteration: %d, Misfit: %.5f, Sample: %d' % (i_iter, self.loss, sample))
                 print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
                 print('*' * 60)
 
-            if np.abs(loss_old - loss) <= 1e-6:
+            if np.abs(loss_old - self.loss) <= 1e-6:
                 break
             else:
                 i_iter += 1
 
-        return p, q, np.asarray(trace)
+        return self.prediction, np.asarray(trace)
 
-    def sgd(self):
+    def _sgd(self):
+        rand_ids = randint(0, len(self.user_ids), self.sample)
+        for rand_id in rand_ids:
+            user, item = (self.user_ids[rand_id], self.item_ids[rand_id])
 
+            self.bu[user] += self.alpha * (self.err[user, item] - self.beta * self.bu[user])
+            self.bi[0, item] += self.alpha * (self.err[user, item] - self.beta * self.bi[0, item])
+
+            self.p[:, item] += self.alpha * (self.err[user, item] * self.q[user, :].T - self.beta * self.p[:, item])
+            self.q[user, :] += self.alpha * (self.err[user, item] * self.p[:, item].T - self.beta * self.q[user, :])
+
+    def get_prediction(self):
+        return np.dot(self.q, self.p) + self.mu + self.bu + self.bi
 
     def rms(self, prediction):
 
@@ -103,9 +118,15 @@ class collabrative_filtering:
         return loss, err_matrix
 
 
-
-
 if __name__ == '__main__':
 
-    training_dataset = pd.read_csv('./data_train_post.csv')
-    cf = collabrative_filtering(training_dataset)
+    training_dataset = pd.read_csv('./data/data_train_post.csv')
+    cf = collabrative_filtering(training_dataset, k=50)
+
+    alpha = 0.02
+    beta = 0.002
+    epsilon = 1e-3
+    max_iter = 5000
+    sample = 100
+
+    cf.train(alpha, beta, max_iter, epsilon, sample)

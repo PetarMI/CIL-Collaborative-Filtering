@@ -1,0 +1,38 @@
+\section{Results}
+\label{sec:results}
+
+This is results. 
+
+Example of list:
+
+\begin{enumerate}
+	\item Sparse-coding with a DCT dictionary \cite{cildct}.
+	\item Sparse-coding with a Haar wavelet \cite{cilhaar}.
+	\item Singular Value Decomposition \cite{cilsvd}.
+	\item Regular diffusion with a $K_{\text{diamond}}$ kernel.
+	\item Directional diffusion with patches of size $16 \times 16$.
+	\item Directional diffusion with patches of size $32 \times 32$.
+\end{enumerate}
+
+blabblabla: 
+\begin{flalign*}
+\text{MSE}(I, I^{\text{rec}}) = \frac{1}{512 \cdot 512} \sum_{i,j} (I_{i,j} - I^{\text{rec}}_{i,j})^2
+\end{flalign*}
+
+
+Hello I am a table
+\begin{table}
+	\centering
+	\begin{tabular}{|l|c|c|}
+		\hline
+		\textbf{Algorithm} & \textbf{MSE} & \textbf{Runtime} \\ \hline \hline
+		Directional Diffusion ($16 \times 16$) & $\mathbf{0.00055} \pm 0.00051$ & $8.7 \pm 2.13$ \\ \hline
+		Directional Diffusion ($32 \times 32$) & $0.00057 \pm 0.00053$ & $2.4 \pm 0.04$ \\ \hline
+		Diffusion ($K_{\text{diamond}}$) & $0.00061 \pm 0.00057$ & $\mathbf{0.5} \pm 0.06$ \\ \hline
+		Sparse-coding (DCT) & $0.0015 \pm 0.0012$ & $12.8 \pm 4.67$ \\ \hline
+		Sparse-coding (Haar wavelet) & $0.0024 \pm 0.0021$ & $13.0 \pm 3.72$ \\ \hline
+		Singular Value Decomposition & $0.0019 \pm 0.0018$ & $0.7 \pm 0.09$ \\ \hline
+	\end{tabular}
+	\caption{Mean squared error and runtime (in seconds) across different algorithms for the text mask. The best result is highlighted in bold.}
+	\label{tbl:err_text}
+\end{table}

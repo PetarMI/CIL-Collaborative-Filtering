@@ -1,6 +1,15 @@
 # CIL-Collaborative-Filtering
 Repo for the CIL group project on Recommender Systems and Collaborative FIltering using SVD
 
+### Updates after 3rd meeting on 7-May
+
+1. Wrap up the finished functions into a class
+
+2. cleaned up the workspace
+
+TODO: Test different parameters for a better training performance
+
+
 ### Updates after 2nd meeting on 30th-Apr
 
 1. Wrap up the .csv file processing functions into helper.py, which contains two methods:

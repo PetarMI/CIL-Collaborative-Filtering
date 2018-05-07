@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import subprocess
+
 # parse the row/colomn indices from the given csv file 
 # and write the result into a new csv file
 def csv_parse(csv_file, csv_to):    
@@ -16,9 +18,9 @@ def csv_parse(csv_file, csv_to):
 def write_submission(A, **kwarg):
     
     src = kwarg.get('src',
-                    './cil-collab-filtering-2018/sampleSubmission.csv')
+                    './data/sampleSubmission.csv')
     dst = kwarg.get('dst',
-                    './cil-collab-filtering-2018/submission.csv')
+                    './data/submission.csv')
     
     df_read = pd.read_csv(src)
     id_string = df_read['Id'].str.split('_')
@@ -30,3 +32,20 @@ def write_submission(A, **kwarg):
           % np.shape(df_read)[0])
     
     return None
+
+# def submit_results(src='./data/submission.csv', msg=''):
+
+#     option = 'kaggle competitions submit -c cil-collab-filtering-2018 -f ' + src + ' -m ' + msg
+
+#     flag = input('Only 5 submission a day. Are you sure about this submission?(y/n)')
+
+#     if flag == 'y' or flag == 'yes':
+#         try:
+#             subprocess.call(option, shell=True)
+#             print('Submission Succeed!')
+#         except:
+#             print('Something went Wrong!!!')
+#     else:
+#         print('Submission Stopped.')
+
+
