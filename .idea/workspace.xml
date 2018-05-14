@@ -2,46 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66a4ba8c-2e8b-44d7-aa81-732aa8b407ae" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CIL_Collab_filtering_Shiyi.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CF.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/CF.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Collabrative_Filtering.py" beforeDir="false" afterPath="$PROJECT_DIR$/Collabrative_Filtering.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MATRIX FACTORIZATION TECHNIQUES FOR RECOMMENDER SYSTEMS.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/IEEEtran.bst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/IEEEtran.cls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/cil_report.bib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/cil_report.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/cil_report.synctex.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/cil_report.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/conclusion.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/discussion.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/TomAndJerry_512x512.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/TomAndJerry_512x512_mask.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/claudia-32x32.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/claudia_512x512.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/claudia_512x512_mask.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/directional_claudia.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/directional_spiral.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/mse.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/mse_std.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/mse_vector.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/runtime.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/runtime_std.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/runtime_vector.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/spiral-32x32.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/spiral_512x512.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/spiral_512x512_mask.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/step-by-step-cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/step-by-step-directional.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/figures/tomandjerry-32x32.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/method.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report/results.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Untitled.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cil-collab-filtering-2018/data_train.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cil-collab-filtering-2018/sampleSubmission.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cil-collab-filtering-2018/submission_baseline.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/exercise03.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/helper.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -51,24 +15,17 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/CIL_Collaborative_Filtering$Collabrative_Filtering.coverage" NAME="Collabrative_Filtering Coverage Results" MODIFIED="1525710911187" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CIL_Collaborative_Filtering$Collabrative_Filtering.coverage" NAME="Collabrative_Filtering Coverage Results" MODIFIED="1526286541084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="Collabrative_Filtering.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Collabrative_Filtering.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="128" column="19" selection-start-line="128" selection-start-column="19" selection-end-line="128" selection-end-column="19" />
+            <state relative-caret-position="-467">
+              <caret line="13" column="36" lean-forward="true" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="36" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#349#711#0" />
-                <element signature="e#751#1219#0" />
-                <element signature="e#1255#1528#0" />
-                <element signature="e#1612#2730#0" />
-                <element signature="e#2847#3430#0" />
-                <element signature="e#3609#3661#0" />
-                <element signature="e#2713#3060#0" />
               </folding>
             </state>
           </provider>
@@ -90,8 +47,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/Collabrative_Filtering.py" />
         <option value="$PROJECT_DIR$/helper.py" />
+        <option value="$PROJECT_DIR$/Collabrative_Filtering.py" />
       </list>
     </option>
   </component>
@@ -104,7 +61,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="width" value="1280" />
     <option name="height" value="800" />
   </component>
@@ -113,7 +70,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -125,12 +81,14 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -185,21 +143,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.0027586208" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.23172414" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2536349" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16962843" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -221,18 +180,42 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Collabrative_Filtering.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1920">
+          <caret line="128" column="30" selection-start-line="128" selection-start-column="30" selection-end-line="128" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Collabrative_Filtering.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1620">
+          <caret line="108" column="30" lean-forward="true" selection-start-line="108" selection-start-column="30" selection-end-line="108" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Collabrative_Filtering.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1920">
+          <caret line="128" column="19" selection-start-line="128" selection-start-column="19" selection-end-line="128" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1163" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CIL_Collab_filtering_Shiyi.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="13" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/CIL_Collab_filtering_Shiyi.ipynb" />
     <entry file="file:///usr/local/Cellar/python3/3.6.3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/numpy/core/numeric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -251,25 +234,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
           <caret line="35" column="45" selection-start-line="35" selection-start-column="45" selection-end-line="35" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Collabrative_Filtering.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="128" column="19" selection-start-line="128" selection-start-column="19" selection-end-line="128" selection-end-column="19" />
+        <state relative-caret-position="-467">
+          <caret line="13" column="36" lean-forward="true" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="36" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#349#711#0" />
-            <element signature="e#751#1219#0" />
-            <element signature="e#1255#1528#0" />
-            <element signature="e#1612#2730#0" />
-            <element signature="e#2847#3430#0" />
-            <element signature="e#3609#3661#0" />
-            <element signature="e#2713#3060#0" />
           </folding>
         </state>
       </provider>

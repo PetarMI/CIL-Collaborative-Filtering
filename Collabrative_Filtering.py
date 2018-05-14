@@ -124,6 +124,9 @@ class collabrative_filtering:
             self.q[user, :] += self.alpha * (self.err[user, item] * self.p[:, item].T - self.beta * self.q[user, :])
 
     def get_prediction(self):
+        # print(self.q.shape)
+        # print(self.p.shape)
+        # print(self.mu.shape)
         return np.dot(self.q, self.p) + self.mu + self.bu + self.bi
     
     def rms(self, prediction):

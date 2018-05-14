@@ -116,3 +116,4 @@ venv.bak/
 train_data_matrix.npy
 /cil-collab-filtering-2018/submission.csv
 /data_train_post.csv
+/data/submission.csv
