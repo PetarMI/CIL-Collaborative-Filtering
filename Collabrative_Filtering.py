@@ -4,8 +4,8 @@ from scipy.sparse import coo_matrix
 from numpy.random import randint
 from numpy.linalg import svd
 from time import time
-
-
+from helper import write_submission, csv_parse, submit_results
+import matplotlib.pyplot as plt
 
 class collabrative_filtering:
 
@@ -23,6 +23,7 @@ class collabrative_filtering:
         self.r = coo_matrix((self.train_data['Prediction'], (self.user_ids, self.item_ids)))
 
         self.baseline = self.creat_baseline()
+        self.baseline = self.baseline - np.mean(self.mean_per_item)
 
     def creat_baseline(self):
         '''
@@ -143,13 +144,56 @@ class collabrative_filtering:
 
 if __name__ == '__main__':
 
-    training_dataset = pd.read_csv('./data/data_train_post.csv')
-    cf = collabrative_filtering(training_dataset, k=50)
+    #training_dataset = pd.read_csv('./data/data_train_post.csv')
+    #cf = collabrative_filtering(training_dataset, k=50)
 
-    alpha = 0.02
-    beta = 0.002
-    epsilon = 1e-3
-    max_iter = 5000
-    sample = 100
+    #alpha = 0.02
+    #beta = 0.002
+    #epsilon = 1e-3
+    #max_iter = 5000
+    #sample = 100
 
-    cf.train(alpha, beta, max_iter, epsilon, sample)
+    #cf.train(alpha, beta, max_iter, epsilon, sample)
+    
+    alphas = np.array([0.0002, 0.002, 0.02])
+    betas = np.array([0.01, 0.02])
+    samples = np.array([50,100,200])
+    ks = np.array([10,50,100])
+    
+    mini = 3.14
+    alphaM = 1
+    betaM = 1
+    sampleM = 1
+    kM = 1
+    
+    for alpha in alphas:
+        for beta in betas:
+            for sample in samples:
+                for k_ in ks:
+                    
+                    epsilon = 1e-3
+                    max_iter = 5000
+                    
+                    training_dataset = pd.read_csv('./data/bootstrap_train.csv')
+                    keywords = {"k": k_}
+                    cf = collabrative_filtering(training_dataset, **keywords)
+
+                    final_pred, traces = cf.train(alpha, beta, max_iter, epsilon, sample)
+
+                    test_data = pd.read_csv('./data/bootstrap_test.csv')
+                    row_ids = test_data['row_id']
+                    col_ids = test_data['col_id']
+                    test_result = final_pred[row_ids-1, col_ids-1]
+                    err = test_data['Prediction'].values-test_result
+                    rms = np.sqrt(np.sum(np.power(err[0], 2))/test_result.shape[1])
+
+                    s = 'For alpha = ' + repr(alpha) + ', beta = ' + repr(beta) + ', number of samples = ' + repr(sample) + ', and k = ' + repr(k_) + ', we get RMS = ' + repr(rms)
+                    print(s)
+                    if mini > rms:
+                        mini = rms
+                        alphaM = alpha
+                        betaM = beta
+                        sampleM = sample
+                        kM = k_
+    s = 'We get the best rms for alpha = ' + repr(alphaM) + ', beta = ' + repr(betaM) + ', number of samples = ' + repr(sampleM) + ', and k = ' + repr(kM) + ': RMS = ' + repr(mini)
+    print(s)
