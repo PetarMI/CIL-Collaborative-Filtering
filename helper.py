@@ -33,19 +33,19 @@ def write_submission(A, **kwarg):
     
     return None
 
-# def submit_results(src='./data/submission.csv', msg=''):
+def submit_results(src='./data/submission.csv', msg=''):
 
-#     option = 'kaggle competitions submit -c cil-collab-filtering-2018 -f ' + src + ' -m ' + msg
+     option = 'kaggle competitions submit -c cil-collab-filtering-2018 -f ' + src + ' -m ' + msg
 
-#     flag = input('Only 5 submission a day. Are you sure about this submission?(y/n)')
+     flag = input('Only 5 submission a day. Are you sure about this submission?(y/n)')
 
-#     if flag == 'y' or flag == 'yes':
-#         try:
-#             subprocess.call(option, shell=True)
-#             print('Submission Succeed!')
-#         except:
-#             print('Something went Wrong!!!')
-#     else:
-#         print('Submission Stopped.')
+     if flag == 'y' or flag == 'yes':
+         try:
+             subprocess.call(option, shell=True)
+             print('Submission Succeed!')
+         except:
+             print('Something went Wrong!!!')
+     else:
+         print('Submission Stopped.')
 
 

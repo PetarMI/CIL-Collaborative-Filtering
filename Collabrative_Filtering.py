@@ -45,9 +45,29 @@ class collabrative_filtering:
 
         s_diag = np.diag(np.sqrt(s))
         u_prime = np.dot(u, s_diag)
-        vh_prime = np.dot(vh, s_diag)
+        vh_prime = np.dot(s_diag, vh)
 
         return u_prime[:, 0:self.k], vh_prime[0:self.k, :]
+    
+    def findK(self):
+        traces = []
+        tic = time()
+        
+        for currentk in range(1, 1000):
+            u,v = self._svd_decomp(currentk)
+            
+            prediction = np.dot(u,v) 
+            
+            err = (self.r.todense() - prediction)[self.user_ids, self.item_ids]
+            loss = np.sqrt(np.sum(np.asarray(err) ** 2) / len(self.user_ids))
+        
+            traces.append([currentk, loss])
+            
+            if currentk % 50 == 0:
+                print("Number of iterations passed %d" % (currentk))
+                toc = time()
+                print("Average time per iteration is %f" % ((toc - tic) / currentk) )
+        return np.asarray(traces)
 
     def train(self, alpha, beta, max_iter, epsilon, sample):
 
@@ -105,7 +125,7 @@ class collabrative_filtering:
 
     def get_prediction(self):
         return np.dot(self.q, self.p) + self.mu + self.bu + self.bi
-
+    
     def rms(self, prediction):
 
         # Calculate the total loss with respect to the whole training data
