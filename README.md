@@ -28,3 +28,16 @@ TODO: Test different parameters for a better training performance
 3. SGD simple version done. Convergence at ~ RMS=0.6, score=1.2
 
   - The SGD algorithm in Step-3 should be optimised for speed and covergence rate
+
+### Structure of the project
+1. svd_approach.py 
+	
+	- contains the baseline implementation of the recommender system using simple SVD
+
+2. data_handler.py
+	
+	- contains all functions that parse the data, including loading and processing .csv files
+
+3. paths.py
+	
+	- contains some paths and constants that are used throughout
