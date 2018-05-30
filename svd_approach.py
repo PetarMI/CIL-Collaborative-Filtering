@@ -5,6 +5,7 @@ import data_handler as dh
 import paths
 import matplotlib.pyplot as plt
 
+
 def fill_averages(df_data: pd.DataFrame) -> np.ndarray:
     """ Construct a rating matrix with average ratings inserted in positions
         with not rating
@@ -76,8 +77,11 @@ def calc_rmse(df_data: pd.DataFrame, prediction_matrix: np.ndarray) -> float:
 
 
 def cross_validation():
-    df_train_data = dh.read_data(paths.train_data_location)
-    df_test_data = dh.read_data(paths.test_data_location)
+    df_data: pd.DataFrame = dh.read_data(paths.total_dataset_location)
+    data_dict: dict = dh.split_original_data(df_data)
+
+    df_train_data: pd.DataFrame = data_dict["train_data"]
+    df_test_data: pd.DataFrame = data_dict["test_data"]
 
     A: np.ndarray = fill_averages(df_train_data)
 
@@ -88,14 +92,38 @@ def cross_validation():
 
     print("Starting cross validation")
 
+    ks = []
+    errs = []
+
+    # Winning K = 10
     for k in range(min_k, max_k + 1):
         prediction_matrix = make_predictions(k, U, Vh)
         err = calc_rmse(df_test_data, prediction_matrix)
-        print("K={0}, RMSE={1}".format(k, err))
+        print("K = {0}, RMSE = {1}".format(k, err))
+        ks.append(k)
+        errs.append(err)
+
+    plt.plot(ks, errs)
+    plt.show()
+
+
+def execute_approach():
+    df_data: pd.DataFrame = dh.read_data(paths.total_dataset_location)
+
+    A: np.ndarray = fill_averages(df_data)
+    U, Vh = perform_svd(A)
+
+    # K = 10 was the winning value from the cross validation
+    k = 10
+
+    prediction_matrix = make_predictions(k, U, Vh)
+    assert(prediction_matrix.shape == (10000, 1000))
+    dh.write_submission(prediction_matrix)
 
 
 def run():
-    cross_validation()
+    # cross_validation()
+    execute_approach()
 
 
 if __name__ == "__main__":

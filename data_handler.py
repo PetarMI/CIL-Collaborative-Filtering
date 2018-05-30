@@ -30,13 +30,19 @@ def data_as_matrix(df_data: pd.DataFrame) -> coo_matrix:
     item_ids = df_data['col_id'] - 1
     predictions = df_data['Prediction']
 
-    R: coo_matrix = coo_matrix((predictions, (user_ids, item_ids)))
+    R: coo_matrix = coo_matrix((predictions, (user_ids, item_ids)), shape=(10000, 1000))
 
     return R
 
 
 # TODO annotate return type
 def split_original_data(df_data: pd.DataFrame):
+    """ Split the original data into train and test data
+        with ratio 80:20
+
+    :param df_data: The data we are splitting
+    :return: a dictionary for both train and test data
+    """
     test_data: pd.DataFrame = df_data.sample(frac=paths.test_data_fraction)
     test_data.sort_index(inplace=True)
     train_data: pd.DataFrame = df_data.drop(test_data.index)
