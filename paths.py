@@ -7,3 +7,5 @@ num_cols = 1000
 
 num_users = 10000
 num_movies = 1000
+
+test_data_fraction = 0.2

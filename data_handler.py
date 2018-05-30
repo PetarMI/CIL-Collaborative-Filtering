@@ -35,8 +35,18 @@ def data_as_matrix(df_data: pd.DataFrame) -> coo_matrix:
     return R
 
 
+# TODO annotate return type
+def split_original_data(df_data: pd.DataFrame):
+    test_data: pd.DataFrame = df_data.sample(frac=paths.test_data_fraction)
+    test_data.sort_index(inplace=True)
+    train_data: pd.DataFrame = df_data.drop(test_data.index)
+
+    return { "train_data" : train_data,
+             "test_data" : test_data }
+
+
 def preprocess_data(csv_file, csv_to):
-    """ Preprocess the original data given to us
+    """ Preprocess the original data given to us (one-time function)
 
     :param csv_file: The file containing the original data
     :param csv_to: File which we save the processed data to
@@ -52,7 +62,26 @@ def preprocess_data(csv_file, csv_to):
     return df_read
 
 
-def split_original_data():
+# Write the results from matrix to .csv and matches with the sample submission
+def write_submission(A, **kwarg):
+    src = kwarg.get('src',
+                    './data/sampleSubmission.csv')
+    dst = kwarg.get('dst',
+                    './data/submission.csv')
+
+    df_read = pd.read_csv(src)
+    id_string = df_read['Id'].str.split('_')
+    row_ids = id_string.str[0].str[1:].astype('int32')
+    col_ids = id_string.str[1].str[1:].astype('int32')
+    df_read['Prediction'] = A[row_ids - 1, col_ids - 1].T
+    df_read.to_csv(dst, index=False)
+    print('Total number of entries in the submission file: %d'
+          % np.shape(df_read)[0])
+
+    return None
+
+
+"""def split_original_data():
     total_dataset = pd.read_csv(paths.total_dataset_location)
     num_col = (0.75 * total_dataset.groupby('col_id')['row_id'].count()).astype(int)
 
@@ -74,23 +103,4 @@ def split_original_data():
     train_dataset.to_csv(paths.train_data_location, index=False)
 
     test_dataset = total_dataset.loc[int(nrows*0.7):(nrows-1)]
-    test_dataset.to_csv(paths.test_data_location, index=False)
-
-
-# Write the results from matrix to .csv and matches with the sample submission
-def write_submission(A, **kwarg):
-    src = kwarg.get('src',
-                    './data/sampleSubmission.csv')
-    dst = kwarg.get('dst',
-                    './data/submission.csv')
-
-    df_read = pd.read_csv(src)
-    id_string = df_read['Id'].str.split('_')
-    row_ids = id_string.str[0].str[1:].astype('int32')
-    col_ids = id_string.str[1].str[1:].astype('int32')
-    df_read['Prediction'] = A[row_ids - 1, col_ids - 1].T
-    df_read.to_csv(dst, index=False)
-    print('Total number of entries in the submission file: %d'
-          % np.shape(df_read)[0])
-
-    return None
+    test_dataset.to_csv(paths.test_data_location, index=False)"""
