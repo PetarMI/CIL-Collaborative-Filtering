@@ -31,7 +31,7 @@ def perform_svd(A: np.ndarray):
     """ Perform SVD on a given matrix and process the two approximation matrices
 
     :param A: Matrix to perform SVD on
-    :return u_prime, vh_prime: Tuple containing the approximation matrices
+    :return u_prime, vh_prime: Tuple containing the full approximation matrices
     """
     u, s, vh = np.linalg.svd(A, full_matrices=False)
 
@@ -58,17 +58,17 @@ def make_predictions(k: int, U: np.ndarray, Vh: np.ndarray) -> np.ndarray:
     return prediction_matrix
 
 
-def calc_rmse(df_data: pd.DataFrame, prediction_matrix: np.ndarray) -> float:
+def calc_rmse(df_test_data: pd.DataFrame, prediction_matrix: np.ndarray) -> float:
     """ Works by constructing both matrices and then taking only relevant entries
 
-    :param df_data: Data we calculate RMSE w.r.t
+    :param df_test_data: Data we calculate RMSE w.r.t
     :param prediction_matrix: The prediction matrix we have
     :return:
     """
-    user_ids: pd.Series = df_data["row_id"] - 1
-    movie_ids: pd.Series = df_data["col_id"] - 1
+    user_ids: pd.Series = df_test_data["row_id"] - 1
+    movie_ids: pd.Series = df_test_data["col_id"] - 1
 
-    test_data_matrix: coo_matrix = dh.data_as_matrix(df_data).todense()
+    test_data_matrix: coo_matrix = dh.data_as_matrix(df_test_data).todense()
 
     err: np.ndarray = (test_data_matrix - prediction_matrix)[user_ids, movie_ids]
     loss: float = np.sqrt(np.sum(np.asarray(err) ** 2) / len(user_ids))
@@ -78,7 +78,7 @@ def calc_rmse(df_data: pd.DataFrame, prediction_matrix: np.ndarray) -> float:
 
 def cross_validation():
     df_data: pd.DataFrame = dh.read_data(paths.total_dataset_location)
-    data_dict: dict = dh.split_original_data(df_data)
+    data_dict: dict = dh.split_original_data(df_data, 0.2)
 
     df_train_data: pd.DataFrame = data_dict["train_data"]
     df_test_data: pd.DataFrame = data_dict["test_data"]
@@ -117,7 +117,7 @@ def execute_approach():
     k = 10
 
     prediction_matrix = make_predictions(k, U, Vh)
-    assert(prediction_matrix.shape == (10000, 1000))
+    assert(prediction_matrix.shape == (paths.num_users, paths.num_movies))
     dh.write_submission(prediction_matrix)
 
 

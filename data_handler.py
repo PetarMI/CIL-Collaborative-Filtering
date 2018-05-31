@@ -36,14 +36,15 @@ def data_as_matrix(df_data: pd.DataFrame) -> coo_matrix:
 
 
 # TODO annotate return type
-def split_original_data(df_data: pd.DataFrame):
+def split_original_data(df_data: pd.DataFrame, test_fraction: float):
     """ Split the original data into train and test data
         with ratio 80:20
 
     :param df_data: The data we are splitting
+    :param test_fraction: Fraction of the total dataset we use for testing
     :return: a dictionary for both train and test data
     """
-    test_data: pd.DataFrame = df_data.sample(frac=paths.test_data_fraction)
+    test_data: pd.DataFrame = df_data.sample(frac=test_fraction)
     test_data.sort_index(inplace=True)
     train_data: pd.DataFrame = df_data.drop(test_data.index)
 

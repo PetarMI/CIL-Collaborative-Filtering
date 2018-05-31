@@ -9,3 +9,9 @@ num_users = 10000
 num_movies = 1000
 
 test_data_fraction = 0.2
+
+min_rating = 1
+max_rating = 5
+
+# Learning rate
+alpha = 0.001
