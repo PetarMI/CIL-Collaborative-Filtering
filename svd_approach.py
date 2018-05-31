@@ -51,8 +51,8 @@ def make_predictions(k: int, U: np.ndarray, Vh: np.ndarray) -> np.ndarray:
     :return predictions: The approximation matrix we get after dot product of truncated U and V
     """
     # truncate approximation matrices using the first K features
-    u_prime = U[:, 0:k + 1]
-    vh_prime = Vh[0:k + 1, :]
+    u_prime = U[:, 0:k]
+    vh_prime = Vh[0:k, :]
 
     prediction_matrix = np.dot(u_prime, vh_prime)
     return prediction_matrix
@@ -113,7 +113,7 @@ def execute_approach():
     A: np.ndarray = fill_averages(df_data)
     U, Vh = perform_svd(A)
 
-    # K = 10 was the winning value from the cross validation
+    # K = 9 was the winning value from the cross validation
     k = 10
 
     prediction_matrix = make_predictions(k, U, Vh)
@@ -122,8 +122,8 @@ def execute_approach():
 
 
 def run():
-    # cross_validation()
-    execute_approach()
+    cross_validation()
+    #execute_approach()
 
 
 if __name__ == "__main__":
