@@ -35,6 +35,21 @@ def data_as_matrix(df_data: pd.DataFrame) -> coo_matrix:
     return R
 
 
+def df_as_array(df_data: pd.DataFrame) -> np.ndarray:
+    """ Convert the given dataset to an array of tuples
+        where each tuple contains a single entry for user-movie rating
+
+    :param df_data: Data to convert
+    :return train_data: Data as an array
+    """
+    user_ids = df_data["row_id"] - 1
+    movie_ids = df_data["col_id"] - 1
+    ratings = df_data["Prediction"]
+
+    train_data = np.asarray(list(zip(user_ids, movie_ids, ratings)))
+    return train_data
+
+
 # TODO annotate return type
 def split_original_data(df_data: pd.DataFrame, test_fraction: float):
     """ Split the original data into train and test data

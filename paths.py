@@ -10,8 +10,17 @@ num_movies = 1000
 
 test_data_fraction = 0.2
 
-min_rating = 1
-max_rating = 5
+min_rating = 1.0
+max_rating = 5.0
 
 # Learning rate
-alpha = 0.001
+learning_rate = 0.001
+# regularizer
+lambda_term = 0.02
+
+sgd_max_iteration = 1000
+
+# indices for samples in the form of array of tuples
+user_id = 0
+movie_id = 1
+rating_id = 2

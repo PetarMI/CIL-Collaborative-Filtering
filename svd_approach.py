@@ -68,7 +68,7 @@ def calc_rmse(df_test_data: pd.DataFrame, prediction_matrix: np.ndarray) -> floa
     user_ids: pd.Series = df_test_data["row_id"] - 1
     movie_ids: pd.Series = df_test_data["col_id"] - 1
 
-    test_data_matrix: coo_matrix = dh.data_as_matrix(df_test_data).todense()
+    test_data_matrix: np.matrix = dh.data_as_matrix(df_test_data).todense()
 
     err: np.ndarray = (test_data_matrix - prediction_matrix)[user_ids, movie_ids]
     loss: float = np.sqrt(np.sum(np.asarray(err) ** 2) / len(user_ids))
