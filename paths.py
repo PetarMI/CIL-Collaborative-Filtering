@@ -18,7 +18,7 @@ learning_rate = 0.002
 # regularizer
 lambda_term = 0.02
 
-sgd_max_iteration = 1000000
+sgd_max_iteration = 1200000
 
 # indices for samples in the form of array of tuples
 user_id = 0

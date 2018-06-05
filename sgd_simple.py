@@ -15,7 +15,7 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     print("Initializing state of approximation matrices")
     # Initialize the starting matrices using SVD
     k = 11
-    # u, vh = init_baseline(df_train_data, k)
+    # U, M = init_baseline(df_train_data, k)
     U, M = init_random_baseline(k)
     bu: np.ndarray = np.zeros([paths.num_users, 1])
     bi: np.ndarray = np.zeros([1, paths.num_movies])
@@ -75,9 +75,9 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
                 alpha /= 1.5
 
             toc = time()
-            # logger.info('Iteration: %d, Misfit: %.6f, Misfit_test: %.6f' % (i_iter, rmse, test_rmse))
-            print('Iteration: %d, Misfit: %.6f, Misfit_test: %.6f' % (i_iter, rmse, test_rmse))
-            print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
+            logger.info('Iteration: %d, Misfit: %.6f, Misfit_test: %.6f' % (i_iter, rmse, test_rmse))
+            # print('Iteration: %d, Misfit: %.6f, Misfit_test: %.6f' % (i_iter, rmse, test_rmse))
+            # print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
 
     # normalize best result
     prediction_matrix[prediction_matrix > paths.max_rating] = paths.max_rating
@@ -174,7 +174,7 @@ def run():
     df_train_data: pd.DataFrame = data_dict["train_data"]
     df_test_data: pd.DataFrame = data_dict["test_data"]
 
-    train(df_train_data, df_test_data)
+    train(df_data, df_data)
 
 
 if __name__ == "__main__":
