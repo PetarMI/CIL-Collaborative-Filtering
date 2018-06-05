@@ -14,11 +14,11 @@ min_rating = 1.0
 max_rating = 5.0
 
 # Learning rate
-learning_rate = 0.001
+learning_rate = 0.002
 # regularizer
-lambda_term = 0.02
+lambda_term = 0.002
 
-sgd_max_iteration = 1000
+sgd_max_iteration = 1000000
 
 # indices for samples in the form of array of tuples
 user_id = 0
