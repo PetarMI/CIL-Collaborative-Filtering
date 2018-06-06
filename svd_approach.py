@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from scipy.sparse import coo_matrix
 import data_handler as dh
 import paths
 import matplotlib.pyplot as plt
@@ -123,7 +122,7 @@ def execute_approach():
 
 def run():
     cross_validation()
-    #execute_approach()
+    # execute_approach()
 
 
 if __name__ == "__main__":

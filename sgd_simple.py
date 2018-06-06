@@ -14,7 +14,7 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
 
     print("Initializing state of approximation matrices")
     # Initialize the starting matrices using SVD
-    k = 11
+    k = 10
     # U, M = init_baseline(df_train_data, k)
     U, M = init_random_baseline(k)
     bu: np.ndarray = np.zeros([paths.num_users, 1])
@@ -35,6 +35,7 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     prev_U: np.ndarray = U
     prev_M: np.ndarray = M
     prev_rmse: float = rmse
+
     i_iter = 1
     tic = time()
     num_useless_iter = 0
@@ -42,42 +43,39 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     print("Starting SGD algorithm")
     while(i_iter <= paths.sgd_max_iteration):
         # perform update steps
-        U, M = sgd_update(train_samples, U, M, mu, bu, bi, alpha, lambda_term)
+        U, M, bu, bi = sgd_update(train_samples, U, M, mu, bu, bi, alpha, lambda_term)
 
+        prediction_matrix = make_predictions(U, M, mu, bu, bi)
+        rmse = svd_base.calc_rmse(df_test_data, prediction_matrix)
+
+        # stop sgd when we see little to no improvement for 1000 iterations
+        if (rmse > prev_rmse - 1e-7):
+            num_useless_iter += 1
+            logger.info("Useless iteration")
+        else:
+            num_useless_iter = 0
+        if (num_useless_iter == 10):
+            break
+
+        # revert to previous values of approximation matrices
+        # if there is no improvement over the last 100 iterations
+        if (rmse < prev_rmse):
+            prev_U = np.copy(U)
+            prev_M = np.copy(M)
+            prev_rmse = rmse
+        else:
+            U = np.copy(prev_U)
+            M = np.copy(prev_M)
+
+            logger.info("Revert iterations")
+            # update learning rate so we don't miss the minimum
+            alpha /= 1.5
+
+        toc = time()
+        logger.info('Iteration: %d, Misfit: %.8f' % (i_iter, rmse))
+        # print('Iteration: %d, Misfit: %.6f' % (i_iter, rmse))
+        # print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
         i_iter += 1
-        if (i_iter % 100 == 0):
-            prediction_matrix = make_predictions(U, M, mu, bu, bi)
-            rmse = svd_base.calc_rmse(df_train_data, prediction_matrix)
-            test_rmse = svd_base.calc_rmse(df_test_data, prediction_matrix)
-
-            # stop sgd when we see little to no improvement for 1000 iterations
-            if (rmse > prev_rmse - 1e-7):
-                num_useless_iter += 1
-                logger.info("Useless iteration")
-            else:
-                num_useless_iter = 0
-            if (num_useless_iter == 10):
-                break
-
-            # revert to previous values of approximation matrices
-            # if there is no improvement over the last 100 iterations
-            if (rmse < prev_rmse):
-                prev_U = U
-                prev_M = M
-                prev_rmse = rmse
-            else:
-                i_iter -= 100
-                U = prev_U
-                M = prev_M
-
-                logger.info("Revert iterations")
-                # update learning rate so we don't miss the minimum
-                alpha /= 1.5
-
-            toc = time()
-            logger.info('Iteration: %d, Misfit: %.6f, Misfit_test: %.6f' % (i_iter, rmse, test_rmse))
-            # print('Iteration: %d, Misfit: %.6f, Misfit_test: %.6f' % (i_iter, rmse, test_rmse))
-            # print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
 
     # normalize best result
     prediction_matrix[prediction_matrix > paths.max_rating] = paths.max_rating
@@ -87,15 +85,14 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     dh.write_submission(prediction_matrix)
 
 
-def sgd_update(train_samples, U, M, mu, bu, bi, alpha, l):
+def sgd_update(train_samples, U, M, mu, bu, bi, l_rate, l):
     """ Perform the update step of SGD
 
     :param train_samples: all samples we are training w.r.t
-    :param U: Approximation matrix
-    :param M: Approximation matrix
-    :param alpha: learning rate
+    :param U, M: Approximation matrices
+    :param l_rate: learning rate
     :param l: regularizer term
-    :return: updated approximation matrices
+    :return: updated approximation matrices and
     """
     for i in np.random.permutation(len(train_samples)):
         user = train_samples[i][paths.user_id]
@@ -106,21 +103,20 @@ def sgd_update(train_samples, U, M, mu, bu, bi, alpha, l):
         err = rating - prediction
 
         # update the biases
-        bu[user] += alpha * (err - l * bu[user])
-        bi[0, movie] += alpha * (err - l * bi[0, movie])
+        bu[user] += l_rate * (err - l * bu[user])
+        bi[0, movie] += l_rate * (err - l * bi[0, movie])
 
         # update the approximation matrices
-        U[user, :] += alpha * (err * M[:, movie] - l * U[user, :])
-        M[:, movie] += alpha * (err * U[user, :] - l * M[:, movie])
+        U[user, :] += l_rate * (err * M[:, movie] - l * U[user, :])
+        M[:, movie] += l_rate * (err * U[user, :] - l * M[:, movie])
 
-        return U, M
+    return U, M, bu, bi
 
 
 def make_predictions(U: np.ndarray, M: np.ndarray, mu: float, bu: np.ndarray, bi: np.ndarray) -> np.ndarray:
     """ Make the prediction based on the approximation matrices
 
-    :param U: Approximation matrix
-    :param M: Approximation matrix
+    :param U, M: Approximation matrices
     :param mu: Mean rating for all movies
     :param bu: User biases
     :param bi: Movie biases
@@ -174,7 +170,7 @@ def run():
     df_train_data: pd.DataFrame = data_dict["train_data"]
     df_test_data: pd.DataFrame = data_dict["test_data"]
 
-    train(df_data, df_data)
+    train(df_train_data, df_test_data)
 
 
 if __name__ == "__main__":
