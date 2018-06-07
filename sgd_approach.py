@@ -14,8 +14,8 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
 
     print("Initializing state of approximation matrices")
     # Initialize the starting matrices using SVD
-    k = 15
-    U, M = init_random_baseline(k)
+    k = 5
+    U, M = init_svd_baseline(df_train_data, k)
     bu: np.ndarray = np.zeros([paths.num_users, 1])
     bi: np.ndarray = np.zeros([1, paths.num_movies])
     mu: float = df_train_data['Prediction'].mean()
@@ -33,6 +33,8 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     # initialize variables used for backtracking the solution
     prev_U: np.ndarray = U
     prev_M: np.ndarray = M
+    prev_bu: np.ndarray = bu
+    prev_bi: np.ndarray = bi
     prev_rmse: float = rmse
 
     i_iter = 1
@@ -62,7 +64,10 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
         if (rmse < prev_rmse):
             prev_U = np.copy(U)
             prev_M = np.copy(M)
+            prev_bu = np.copy(bu)
+            prev_bi = np.copy(bi)
             prev_rmse = rmse
+            uphill_iter = 0
         else:
             uphill_iter += 1
             # if rmse keeps getting worse after 5 iterations revert to previous best result
@@ -70,6 +75,8 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
                 logger.info("Revert iterations")
                 U = np.copy(prev_U)
                 M = np.copy(prev_M)
+                bu = np.copy(prev_bu)
+                bi = np.copy(prev_bi)
 
                 # update learning rate so we don't miss the minimum
                 alpha /= 1.5
@@ -81,6 +88,7 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
         # print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
         i_iter += 1
 
+    prediction_matrix = make_predictions(prev_U, prev_M, mu, prev_bu, prev_bi)    
     # normalize best result
     prediction_matrix[prediction_matrix > paths.max_rating] = paths.max_rating
     prediction_matrix[prediction_matrix < paths.min_rating] = paths.min_rating
@@ -145,6 +153,23 @@ def init_random_baseline(k: int):
 
     return U, M
 
+
+def init_svd_baseline(df_data: pd.DataFrame, k: int):
+    """ Prepare the baseline for first iteration of SGD
+    Baseline is the approximation matrices inferred from the SVD approach
+
+    :param df_data: Training data that we initialize from
+    :param k: Number of features
+    :return: The approximation matrices
+    """
+    A: np.ndarray = svd_base.fill_averages(df_data)
+    mu: float = df_data['Prediction'].mean()
+    u, vh = svd_base.perform_svd(A-mu)
+
+    u_prime = u[:, :k]
+    vh_prime = vh[:k, :]
+
+    return u_prime, vh_prime
 
 def run():
     logging.config.fileConfig("logging_config.ini")
