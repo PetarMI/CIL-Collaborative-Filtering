@@ -100,26 +100,8 @@ def write_submission(A, **kwarg):
     return None
 
 
-"""def split_original_data():
-    total_dataset = pd.read_csv(paths.total_dataset_location)
-    num_col = (0.75 * total_dataset.groupby('col_id')['row_id'].count()).astype(int)
-
-    train_dataset = pd.DataFrame(columns=['Id', 'Prediction', 'row_id', 'col_id'])
-    test_dataset = pd.DataFrame(columns=['Id', 'Prediction', 'row_id', 'col_id'])
-    for i in range(1, 1001):
-        current_rows = total_dataset.loc[total_dataset['col_id'] == i]
-        train_dataset = train_dataset.append(current_rows.iloc[0:num_col.iloc[i-1]])
-        train_dataset = train_dataset.append(current_rows.iloc[-1])
-        test_dataset = test_dataset.append(current_rows.iloc[num_col.iloc[i-1]: -1])
-        if i % 100 == 0:
-            print(i)
-    print(train_dataset.groupby('col_id')['row_id'].count())
-
-    nrows = total_dataset.shape[0]
-    train_dataset = total_dataset.iloc[0:int(nrows*0.7)]
-    train_dataset = train_dataset.append(total_dataset.iloc[-1])
-    print(train_dataset.iloc[-1])
-    train_dataset.to_csv(paths.train_data_location, index=False)
-
-    test_dataset = total_dataset.loc[int(nrows*0.7):(nrows-1)]
-    test_dataset.to_csv(paths.test_data_location, index=False)"""
+def log(logger, msg: str, to_file: bool):
+    if(to_file):
+        logger.info(msg)
+    else:
+        print(msg)
