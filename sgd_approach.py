@@ -51,7 +51,7 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
         # stop sgd when we see little to no improvement for 1000 iterations
         if (rmse > prev_rmse - 1e-7):
             num_useless_iter += 1
-            logger.info("Useless iteration")
+            logger.info("Useless iteration {0}".format(num_useless_iter))
         else:
             num_useless_iter = 0
         if (num_useless_iter == 10):
@@ -65,18 +65,20 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
             prev_rmse = rmse
         else:
             uphill_iter += 1
+            logger.info("Went uphill: {0}".format(uphill_iter))
             # if rmse keeps getting worse after 5 iterations revert to previous best result
             if (uphill_iter >= 5):
                 logger.info("Revert iterations")
                 U = np.copy(prev_U)
                 M = np.copy(prev_M)
 
-                # update learning rate so we don't miss the minimum
+                # update learning rate so we don't miss the minimum again
                 alpha /= 1.5
                 uphill_iter = 0
 
         toc = time()
-        logger.info('Iteration: %d, Misfit: %.8f' % (i_iter, rmse))
+        iter_time = (toc - tic) / i_iter
+        logger.info('Iteration: %d, Misfit: %.8f, Time: %.3f' % (i_iter, rmse, iter_time))
         # print('Iteration: %d, Misfit: %.6f' % (i_iter, rmse))
         # print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
         i_iter += 1
