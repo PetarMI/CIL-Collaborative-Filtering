@@ -7,14 +7,14 @@ import paths
 import logging, logging.config
 
 
-def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
+def train(k: int, df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     """ Main function running the simple SGD approach
     """
     logger = logging.getLogger('sLogger')
+    logger.info("Training for K = {0}".format(k))
 
     print("Initializing state of approximation matrices")
     # Initialize the starting matrices using SVD
-    k = 5
     U, M = init_svd_baseline(df_train_data, k)
     bu: np.ndarray = np.zeros([paths.num_users, 1])
     bi: np.ndarray = np.zeros([1, paths.num_movies])
@@ -23,7 +23,7 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     # Calculate the initial loss
     prediction_matrix = make_predictions(U, M, mu, bu, bi)
     rmse = svd_base.calc_rmse(df_train_data, prediction_matrix)
-    print("Initial loss: {0}".format(rmse))
+    logger.info("Initial loss: {0}".format(rmse))
 
     # initialize other variables needed for training
     train_samples: np.ndarray = dh.df_as_array(df_train_data)
@@ -49,6 +49,11 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
 
         prediction_matrix = make_predictions(U, M, mu, bu, bi)
         rmse = svd_base.calc_rmse(df_test_data, prediction_matrix)
+
+        toc = time()
+        iter_time = (toc - tic) / i_iter
+        logger.info('Iteration: %d, Misfit: %.8f, Improvement: %.8f, Time: %.3f'
+                    % (i_iter, rmse, prev_rmse - rmse, iter_time))
 
         # stop sgd when we see little to no improvement for 1000 iterations
         if (rmse > prev_rmse - 1e-7):
@@ -83,18 +88,16 @@ def train(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
                 alpha /= 1.5
                 uphill_iter = 0
 
-        toc = time()
-        iter_time = (toc - tic) / i_iter
-        logger.info('Iteration: %d, Misfit: %.8f, Time: %.3f' % (i_iter, rmse, iter_time))
-        # print('Iteration: %d, Misfit: %.6f' % (i_iter, rmse))
-        # print('Average time per iteration: %.4f' % ((toc - tic) / i_iter))
         i_iter += 1
 
-    prediction_matrix = make_predictions(prev_U, prev_M, mu, prev_bu, prev_bi)    
     # normalize best result
-    prediction_matrix[prediction_matrix > paths.max_rating] = paths.max_rating
-    prediction_matrix[prediction_matrix < paths.min_rating] = paths.min_rating
+    prediction_matrix = make_predictions(prev_U, prev_M, mu, prev_bu, prev_bi)
+    prediction_matrix = normalize_predictions(prediction_matrix)
 
+    rmse = svd_base.calc_rmse(df_train_data, prediction_matrix)
+    logger.info("Final RMSE for K = {0} is {1}".format(k, rmse))
+
+    # save data
     assert (prediction_matrix.shape == (paths.num_users, paths.num_movies))
     dh.write_submission(prediction_matrix)
 
@@ -143,6 +146,18 @@ def make_predictions(U: np.ndarray, M: np.ndarray, mu: float, bu: np.ndarray, bi
     return prediction_matrix
 
 
+def normalize_predictions(prediction_matrix: np.ndarray) -> np.ndarray:
+    """ Make sure final predictions are between 1 and 5
+
+    :param prediction_matrix: The SGD matrix
+    :return: normalized matrix
+    """
+    prediction_matrix[prediction_matrix > paths.max_rating] = paths.max_rating
+    prediction_matrix[prediction_matrix < paths.min_rating] = paths.min_rating
+
+    return prediction_matrix
+
+
 def init_random_baseline(k: int):
     """ Baseline approximation matrices with random values
         drawn from a Normal distribution
@@ -173,6 +188,14 @@ def init_svd_baseline(df_data: pd.DataFrame, k: int):
 
     return u_prime, vh_prime
 
+
+def cross_validation(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
+    ks = [4, 5, 6, 7, 8, 9, 10, 11, 15]
+
+    for k in ks:
+        train(k, df_train_data, df_test_data)
+
+
 def run():
     logging.config.fileConfig("logging_config.ini")
 
@@ -183,7 +206,10 @@ def run():
     df_train_data: pd.DataFrame = data_dict["train_data"]
     df_test_data: pd.DataFrame = data_dict["test_data"]
 
-    train(df_train_data, df_test_data)
+    cross_validation(df_train_data, df_test_data)
+    # assign the best result from cross validation to K
+    # K = 10
+    # train(df_train_data, df_test_data)
 
 
 if __name__ == "__main__":
