@@ -22,7 +22,7 @@ def train(k: int, df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
 
     # Calculate the initial loss
     prediction_matrix = make_predictions(U, M, mu, bu, bi)
-    rmse = svd_base.calc_rmse(df_train_data, prediction_matrix)
+    rmse = svd_base.calc_rmse(df_test_data, prediction_matrix)
     logger.info("Initial loss: {0}".format(rmse))
 
     # initialize other variables needed for training
@@ -94,12 +94,14 @@ def train(k: int, df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
     prediction_matrix = make_predictions(prev_U, prev_M, mu, prev_bu, prev_bi)
     prediction_matrix = normalize_predictions(prediction_matrix)
 
-    rmse = svd_base.calc_rmse(df_train_data, prediction_matrix)
+    rmse = svd_base.calc_rmse(df_test_data, prediction_matrix)
     logger.info("Final RMSE for K = {0} is {1}".format(k, rmse))
 
     # save data
     assert (prediction_matrix.shape == (paths.num_users, paths.num_movies))
     dh.write_submission(prediction_matrix)
+
+    return rmse
 
 
 def sgd_update(train_samples, U, M, mu, bu, bi, l_rate, l):
@@ -190,10 +192,14 @@ def init_svd_baseline(df_data: pd.DataFrame, k: int):
 
 
 def cross_validation(df_train_data: pd.DataFrame, df_test_data: pd.DataFrame):
-    ks = [4, 5, 6, 7, 8, 9, 10, 11, 15]
+    ks = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    rmses = []
 
     for k in ks:
-        train(k, df_train_data, df_test_data)
+        rmse = train(k, df_train_data, df_test_data)
+        rmses.append(rmse)
+
+    print(rmses)
 
 
 def run():
@@ -208,8 +214,8 @@ def run():
 
     cross_validation(df_train_data, df_test_data)
     # assign the best result from cross validation to K
-    # K = 10
-    # train(df_train_data, df_test_data)
+    # k = 15
+    # train(k, df_train_data, df_test_data)
 
 
 if __name__ == "__main__":
