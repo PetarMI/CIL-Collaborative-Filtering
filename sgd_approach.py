@@ -212,10 +212,10 @@ def run():
     df_train_data: pd.DataFrame = data_dict["train_data"]
     df_test_data: pd.DataFrame = data_dict["test_data"]
 
-    cross_validation(df_train_data, df_test_data)
+    # cross_validation(df_train_data, df_test_data)
     # assign the best result from cross validation to K
-    # k = 15
-    # train(k, df_train_data, df_test_data)
+    k = 11
+    train(k, df_train_data, df_test_data)
 
 
 if __name__ == "__main__":
