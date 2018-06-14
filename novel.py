@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from time import time
+import logging
+import logging.config
 import math
 import data_handler as dh
 import paths
@@ -35,6 +37,7 @@ def calculate_all_means(df_data: pd.DataFrame):
     movie_ids = (df_data['col_id'] - 1).values
     ratings = df_data['Prediction'].values
 
+    print("Calculating average movie ratings")
     # find the average ratings for each movie
     movie_ratings = []
     for m in range(0, paths.num_movies):
@@ -44,6 +47,7 @@ def calculate_all_means(df_data: pd.DataFrame):
         movie_mean = calculate_item_mean(ratings, m_ratings)
         movie_ratings.append(movie_mean)
 
+    print("Calculating rating offsets")
     # find the offset of each rating
     rating_offsets = []
     for r in range(0, len(ratings)):
@@ -52,6 +56,7 @@ def calculate_all_means(df_data: pd.DataFrame):
 
     rating_offsets = np.asarray(rating_offsets)
     user_offsets = []
+    print("Calculating average user offsets")
     # calculate the mean offset for each user
     for u in range(0, paths.num_users):
         # find all entries for user u and then all their ratings
@@ -89,6 +94,19 @@ def make_prediction(mean_predictions, user_features, movie_features, bu, bm, use
     return rating
 
 
+def final_predictions(mean_predictions, user_features, movie_features, bu, bm):
+    prediction_matrix = np.zeros((10000, 1000))
+    for u in range(0, 10000):
+        for m in range(0, 1000):
+            prediction = make_prediction(mean_predictions, user_features, movie_features,
+                                         bu, bm, u, m)
+            prediction = max(1.0, prediction)
+            prediction = min(5.0, prediction)
+            prediction_matrix[u][m] = prediction
+
+    return prediction_matrix
+
+
 def calculate_rmse(mean_predictions, user_features, movie_features, bu, bm, test_samples):
     """ Calculate the rmse w.r.t. every sample in the testing set """
     errors = []
@@ -105,17 +123,20 @@ def calculate_rmse(mean_predictions, user_features, movie_features, bu, bm, test
 
 
 def train(k, mean_predictions, user_features, movie_features, bu, bm, train_data, test_data):
+    logger = logging.getLogger('sLogger')
     rmse: float = calculate_rmse(mean_predictions, user_features, movie_features, bu, bm, test_data)
     prev_rmse: float = rmse
+    logger.info("Starting RMSE: {0}".format(rmse))
 
     for feature in range(0, k):
         print("Training feature {0}".format(feature))
+        logger.info("Training feature {0}".format(feature))
         user_features[:, feature] = 0.1
         movie_features[feature] = 0.1
 
         tic = time()
         # train the feature
-        for i in range(0, 1000):
+        for i in range(1, 100):
             for sample in train_data:
                 user = sample[paths.user_id]
                 movie = sample[paths.movie_id]
@@ -137,14 +158,15 @@ def train(k, mean_predictions, user_features, movie_features, bu, bm, train_data
             rmse = calculate_rmse(mean_predictions, user_features, movie_features, bu, bm, test_data)
             toc = time()
             iter_time = (toc - tic) / i
-            print('Iteration: %d, Misfit: %.8f, Improvement: %.8f, Time: %.3f'
-                  % (i, rmse, prev_rmse - rmse, iter_time))
-            if (rmse > prev_rmse and i > 5):
+            logger.info('Iteration: %d, Misfit: %.8f, Improvement: %.8f, Time: %.3f'
+                        % (i, rmse, prev_rmse - rmse, iter_time))
+            if (rmse > prev_rmse and i > 4):
                 break
             prev_rmse = rmse
 
 
 def run():
+    logging.config.fileConfig("logging_config.ini")
     print("Processing data")
     df_data: pd.DataFrame = dh.read_data(paths.total_dataset_location)
     data_dict: dict = dh.split_original_data(df_data, 0.1)
@@ -158,10 +180,18 @@ def run():
     mean_predictions = calculate_all_means(df_train_data)
 
     # initialize variables needed for training
-    k = 10
+    k = 80
     bu = np.zeros(paths.num_users)
     bm = np.zeros(paths.num_movies)
     user_features = np.zeros((paths.num_users, k))
     movie_features = np.zeros((k, paths.num_movies))
 
     train(k, mean_predictions, user_features, movie_features, bu, bm, train_samples, test_samples)
+
+    print("Calculating predictions and writing file")
+    prediction_matrix = final_predictions(mean_predictions, user_features, movie_features, bu, bm)
+    dh.write_submission(prediction_matrix)
+
+
+if __name__ == "__main__":
+    run()
