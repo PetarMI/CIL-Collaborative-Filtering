@@ -136,7 +136,7 @@ def train(k, mean_predictions, user_features, movie_features, bu, bm, train_data
 
         tic = time()
         # train the feature
-        for i in range(1, 100):
+        for i in range(1, 1000):
             for sample in train_data:
                 user = sample[paths.user_id]
                 movie = sample[paths.movie_id]
@@ -180,7 +180,7 @@ def run():
     mean_predictions = calculate_all_means(df_train_data)
 
     # initialize variables needed for training
-    k = 80
+    k = 100
     bu = np.zeros(paths.num_users)
     bm = np.zeros(paths.num_movies)
     user_features = np.zeros((paths.num_users, k))
