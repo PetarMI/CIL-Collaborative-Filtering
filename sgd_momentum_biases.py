@@ -135,12 +135,12 @@ def sgd_update(train_samples, U, M, l_rate, mu, bu, bi, prev_delta_U, prev_delta
         err = rating - prediction
 
         # update the biases
-        delta_bu[user] += l_rate * (err - l * bu[user])
-        delta_bi[0, movie] += l_rate * (err - l * bi[0, movie])
+        delta_bu[user] += (1-beta) * l_rate * (err - l * bu[user])
+        delta_bi[0, movie] += (1-beta) * l_rate * (err - l * bi[0, movie])
 
         # update the approximation matrices
-        delta_U[user, :] += l_rate * (err * M[:, movie] - l * U[user, :])
-        delta_M[:, movie] += l_rate * (err * U[user, :] - l * M[:, movie])
+        delta_U[user, :] += (1-beta) * l_rate * (err * M[:, movie] - l * U[user, :])
+        delta_M[:, movie] += (1-beta) * l_rate * (err * U[user, :] - l * M[:, movie])
 
     U += delta_U
     M += delta_M
@@ -228,7 +228,7 @@ def run():
 
     # cross_validation(df_train_data, df_test_data)
     # assign the best result from cross validation to K
-    K = 5
+    K = 12
     train(K, df_train_data, df_test_data)
 
 
